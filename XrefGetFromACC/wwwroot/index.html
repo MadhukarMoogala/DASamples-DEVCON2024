@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="https://cdn.autodesk.io/favicon.ico">
+    <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/inspire-tree-dom@4.0.6/dist/inspire-tree-light.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <!-- Common packages: jQuery, Bootstrap -->
+    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
+    <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+    <title>Autodesk Platform Services: Downloading External References</title>
+</head>
+
+<body style="background-color: #282828; color: #E9FAFC;">
+    <div id="header" >
+        <img class="logo" src="https://cdn.autodesk.io/logo/white/stacked.png" alt="Autodesk Platform Services">
+        <p class="heading">XREF Downloader</p>
+        <button id="login" style="visibility: hidden; color: white; background-color: #333;">Login</button>
+    </div>
+    <div id="sidebar" >
+        <div id="tree"></div>
+    </div>
+    <div id="log">
+        <pre id="outputlog" style="background-color: #282828; color: #E9FAFC;"></pre>
+    </div>
+    <div id="preview"></div>
+    <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://unpkg.com/inspire-tree@4.3.1/dist/inspire-tree.js"></script>
+    <script src="https://unpkg.com/inspire-tree-dom@4.0.6/dist/inspire-tree-dom.min.js"></script>
+    <script src="./main.js" type="module"></script>  
+    <script type="module">
+        // Call the function when DOM is loaded
+        import { startConnection } from './apsda.js';
+        document.addEventListener("DOMContentLoaded", (event) => {            
+            startConnection();
+        },
+        false
+        );
+    </script>
+</body>
+</html>

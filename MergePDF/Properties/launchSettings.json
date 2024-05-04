@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MergePDF": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\Work\\Projects\\Devcon2024\\Samples\\Files"
+    }
+  }
+}

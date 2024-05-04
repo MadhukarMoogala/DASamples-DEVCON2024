@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PublishTrimmed>True</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PDFsharp" Version="6.1.0-preview-3" />
+  </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="IF EXIST &quot;$(SolutionDir)Files\package.zip&quot; (del &quot;$(SolutionDir)Files\package.zip&quot;)&#xD;&#xA;XCOPY &quot;$(TargetDir)&quot; &quot;$(ProjectDir)Bundle\$(ProjectName).bundle\Contents\&quot; /S /E /Y&#xD;&#xA;7z a -tzip &quot;$(SolutionDir)Files\package.zip&quot; &quot;$(ProjectDir)Bundle\&quot;* -xr!*.gitkeep&#xD;&#xA;7z l &quot;$(SolutionDir)Files\package.zip&quot;" />
+    </Target>
+
+</Project>

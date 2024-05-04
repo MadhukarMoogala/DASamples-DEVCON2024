@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DARunner": {
+      "commandName": "Project",
+      "workingDirectory": "$(SolutionDir)\\Files"
+    }
+  }
+}
