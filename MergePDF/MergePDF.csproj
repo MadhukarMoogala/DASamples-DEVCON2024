@@ -21,8 +21,8 @@
     </Target>-->
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <!-- Delete existing package.zip if it exists -->
-        <Exec Command="if exist &quot;$(SolutionDir)Files\package.zip&quot; del &quot;$(SolutionDir)Files\package.zip&quot;" />
+        <!-- Delete existing package.zip if it exists -->        
+        <Delete Files="$(SolutionDir)Files\package.zip" Condition="Exists('$(SolutionDir)Files\package.zip')"/>
         <!-- Copy files and directories -->
         <ItemGroup>
             <BundleFiles Include="$(TargetDir)\**\*" />
