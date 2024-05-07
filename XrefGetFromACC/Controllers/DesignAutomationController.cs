@@ -45,27 +45,26 @@ namespace XrefGetFromACC.Controllers
             JObject workItemData = JObject.Parse(json);      
             JToken? itemId = workItemData["itemUrl"] ?? null;
             JToken? browserConnectionId = workItemData["browserConnectionId"] ?? null;
-            if(browserConnectionId == null  )
+            if(browserConnectionId is null  || itemId is null)
             {
                 return BadRequest("Invalid data");
             }
-            string connectionId = browserConnectionId.ToString();
+            string connectionId = browserConnectionId.ToString(); 
 
             ObjectDetails objectDetails = await _aps.GetObjectId("result.zip", _env.ContentRootPath);
             if(objectDetails is null)
             {
                 return BadRequest("Failed to create object id in Bucket");
             }
-            var tokens = await AuthController.PrepareTokens(Request, Response, _aps); 
-            
+            var tokens = await AuthController.PrepareTokens(Request, Response, _aps);            
             //This token will have `userid` access to ACC data
             var bearerToken1 = $"Bearer {tokens?.InternalToken}";
             Console.WriteLine($"Bearer Token 1: {bearerToken1}");
             //This token is to upload result to OSS bucket
             var acmToken = await _aps.GetInternalToken();
             var bearerToken2 = $"Bearer {acmToken.AccessToken}";
-            Console.WriteLine($"Bearer Token 2: {bearerToken2}");         
-
+            Console.WriteLine($"Bearer Token 2: {bearerToken2}");
+            //definition of activity "xrefgetapp.fetchxrefs+prod" is at "XrefGetFromACC\fetchxrefs.json"
             var workitem = new WorkItem
             {
                 ActivityId = "xrefgetapp.fetchxrefs+prod",
@@ -95,9 +94,9 @@ namespace XrefGetFromACC.Controllers
                     }
                 }
             };
-
             WorkItemStatus workItemStatus = await _designAutomation.CreateWorkItemAsync(workitem);
-            MonitorWorkitem(connectionId, workItemStatus, objectDetails);
+            //Fire and forget
+            _ = MonitorWorkitem(connectionId, workItemStatus, objectDetails);
             return Ok(new { WorkItemId = workItemStatus.Id });
         }
 

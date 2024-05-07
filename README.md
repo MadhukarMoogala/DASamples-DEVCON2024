@@ -319,27 +319,31 @@ var activity = new Activity()
 #### Prerequistes
 
 - APS Account
+  
   - If you don't have an APS account yet, sign up for one on [https://aps.autodesk.com](https://aps.autodesk.com/).
   - [Getting Started | Autodesk Platform Services Tutorials](https://tutorials.autodesk.io/)
+
 - [Autodesk.SdkManager](https://www.nuget.org/packages/Autodesk.SdkManager)
+
 - [Autodesk.Authentication](https://www.nuget.org/packages/Autodesk.Authentication)
+
 - [Autodesk.OSS](https://www.nuget.org/packages/Autodesk.OSS)
+
 - [Autodesk.DataManagement](https://www.nuget.org/packages/Autodesk.DataManagement)
+
 - [Design Automation SDK](https://github.com/MadhukarMoogala/forge-api-dotnet-design.automation)
+  
   - The current release does not yet support `refget`, so you need to use the fork where I made the fix.
+
 - [PDFSharp](https://www.nuget.org/packages/PDFsharp/6.1.0-preview-3)
+  
   - You need to use exactly this version ([6.1.0] or higher). Previous versions lower than the current version will throw an exception while reading PDFs produced by the `AutoCAD.PlotToPDF+prod` activity.
-- [Download AutoCAD 2024 | AutoCAD Free Trial | Autodesk](https://www.autodesk.in/products/autocad/free-trial)
-  - This is required to test your AutoCAD plugin on local environment.
-  - AutoCAD comes with a headless kernal `accoreconsole.exe`
+  
+  
+
 - Visual Studio 2022 with .NET workloads
-  - Both 4.8.x and 8.0 are required.
   
-  - 4.8.x to build AutoCAD 2024 Plugins
-  
-  - 8.0 to build entire sample project.
-  
-  
+  - .NET 8.0 to build entire sample project.
 
 #### Build
 
@@ -348,14 +352,14 @@ var activity = new Activity()
 All projects that use APS services require APS credentials. Here's the process:
 
 - After Cloning the Entire Repository** (Assuming you haven't already)
+
 - **Create `appsettings.user.json`** file to the following projects:
+  
   - DARunner
   
   - XrefGetFromACC
   
   - Go to properties and set  `Copy to Output Directory` to `Copy always` .
-    
-    
 
 **appsettings.user.json**
 
@@ -378,11 +382,10 @@ All projects that use APS services require APS credentials. Here's the process:
 ```
 
 ```bash
-git clone 
+git clone https://github.com/MadhukarMoogala/DASamples-DEVCON2024.git XrefGetFromACC
 cd XrefGetFromACC
 dotnet restore
 dotnet build
-
 ```
 
 **How To Run**
@@ -395,6 +398,7 @@ dotnet watch
 ```
 
 - Project: MergePDF
+  - It will pick up `first.pdf` and `second.pdf` from the `Files` folderd and merges to `final.pdf`
 
 ```bash
 cd Files
@@ -408,31 +412,23 @@ cd Files
 dotnet run --project ..\DARunner\DARunner.csproj
 ```
 
-
-
 **NOTE**
 
 It's important to set the Files directory as the current working directory. All actions of picking artifacts take place from this directory.
-
-
 
 ## DEMO
 
 ### XrefGetFromACC
 
+Todo
+
 ## Combinator
 
-
-
-
+Todo
 
 ## License
 
-
-
 This sample is licensed under the terms of the **Apache License 2.0**. Please see the [LICENSE](https://github.com/MadhukarMoogala/forge-api-dotnet-design.automation/blob/main/LICENSE) file for full details.
-
-
 
 ### Written by
 

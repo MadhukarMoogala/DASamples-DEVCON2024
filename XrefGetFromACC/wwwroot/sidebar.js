@@ -40,9 +40,6 @@ async function getVersions(hubId, projectId, itemId) {
     return versions.map(version => createTreeNode(`version|${version.id}`, version.attributes.createTime, 'icon-version'));
 }
 
-async function sendItem(hubId, projectId, itemId) {
-
-}
 
 export function initTree(selector, onSelectionChanged) {
     // See http://inspire-tree.com

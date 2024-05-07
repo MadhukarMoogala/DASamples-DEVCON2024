@@ -1,0 +1,23 @@
+{
+  "commandLine": [
+    "$(engine.path)\\accoreconsole.exe /i \"$(args[inputFile].path)\" /s $(settings[script].path)"
+  ],
+  "parameters": {
+    "inputFile": {
+      "verb": "refget",
+      "required": true
+    },
+    "etransmit": {
+      "verb": "put",
+      "required": true,
+      "localName": "adskFiles",
+      "zip": true
+    }
+  },
+  "id": "fetchxrefs",
+  "engine": "Autodesk.AutoCAD+24_3",
+  "settings": {
+    "script": "(vl-directory-files \"adskFiles\" nil 1)\n"
+  },
+  "description": "Fetch all xref from host drawing"
+}

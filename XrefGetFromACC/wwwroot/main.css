@@ -83,10 +83,7 @@ body, html {
     font-size: 1em;
 }
 
-/*#header .heading {
-    height: auto;
-    margin-right: auto;
-}*/
+
 .heading {
     height: 1.5em;
     font-size: 1.5em; 
@@ -117,28 +114,28 @@ body, html {
         bottom: 0;
     }
 }
-
 .icon-hub:before {
-    background-image: url(https://raw.githubusercontent.com/primer/octicons/main/icons/apps-16.svg);  or https://raw.githubusercontent.com/primer/octicons/main/icons/stack-16.svg 
+    background-image: url("archive.svg");
     background-size: cover;
+    filter: invert(1) grayscale(100%) brightness(105%);
 }
-
 .icon-project:before {
-    background-image: url(https://raw.githubusercontent.com/primer/octicons/main/icons/project-16.svg);  or https://raw.githubusercontent.com/primer/octicons/main/icons/organization-16.svg 
+    background-image: url("project.svg");
     background-size: cover;
+    filter: invert(1) grayscale(100%) brightness(105%);
 }
-
 .icon-my-folder:before {
-    background-image: url(https://raw.githubusercontent.com/primer/octicons/main/icons/file-directory-16.svg);
+    background-image: url("folder.svg");
     background-size: cover;
+    filter: invert(1) grayscale(100%) brightness(105%);
 }
-
 .icon-item:before {
-    background-image: url(https://raw.githubusercontent.com/primer/octicons/main/icons/file-16.svg);
+    background-image: url("file.svg");
     background-size: cover;
+    filter: invert(1) grayscale(100%) brightness(105%);
 }
-
 .icon-version:before {
-    background-image: url(https://raw.githubusercontent.com/primer/octicons/main/icons/clock-16.svg);
+    background-image: url("version.svg");
     background-size: cover;
+    filter: invert(1) grayscale(100%) brightness(105%);
 }

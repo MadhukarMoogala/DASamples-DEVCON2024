@@ -10,11 +10,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DARunner.Services
 {
+    public class DebugArgument : IArgument
+    {
+        [DataMember(Name = "uploadJobFolder", EmitDefaultValue = false)]
+        public bool UploadJobFolder { get; set; }       
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+    }
     public class WorkItemService
     {
         private readonly HttpClient _client;
@@ -41,7 +51,7 @@ namespace DARunner.Services
                     ["parts"] = JArray.FromObject(partsWorkItems),
                     ["combinator"] = JObject.FromObject(combinatorWorkItem)
                 };
-
+                
                 var request = new HttpRequestMessage(HttpMethod.Post,
                                  requestUri: Marshalling.BuildRequestUri("/v3/workitems/combine",
                                  routeParameters: new Dictionary<string, object>(),
@@ -54,6 +64,7 @@ namespace DARunner.Services
                 {
                     request.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
+                
 
                 using (var response = await _client.SendAsync(request))
                 {
@@ -193,6 +204,7 @@ namespace DARunner.Services
                }
 
             };
+            Console.WriteLine($"\nCreated Part WI {JsonConvert.SerializeObject(workItem, Formatting.Indented)}");
             return workItem;
         }
 
@@ -239,9 +251,23 @@ namespace DARunner.Services
                                     },
                                     LocalName = "final.pdf"
                                 }
+                    },
+                    {
+                        "adskDebug", new DebugArgument()
+                        {
+                            UploadJobFolder = true
+                        }
+                    },
+                    {
+                        "adskMask", new StringArgument()
+                        {
+                            Value = "true"
+                        }
                     }
-                }
+                },
+                LimitProcessingTimeSec = 900
             };
+            Console.WriteLine($"\nCreated Combine WI {JsonConvert.SerializeObject(workitem,Formatting.Indented)}");
             return workitem;
         }
 
