@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using System.Net.Sockets;
+using System.Net;
+using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using XrefGetFromACC.Models;
 using static System.Net.WebRequestMethods;
@@ -64,10 +67,11 @@ namespace XrefGetFromACC.Controllers
             var acmToken = await _aps.GetInternalToken();
             var bearerToken2 = $"Bearer {acmToken.AccessToken}";
             Console.WriteLine($"Bearer Token 2: {bearerToken2}");
-            //definition of activity "xrefgetapp.fetchxrefs+prod" is at "XrefGetFromACC\fetchxrefs.json"
+            
+            var activityId = await CreateFetchXrefsActivity();
             var workitem = new WorkItem
             {
-                ActivityId = "xrefgetapp.fetchxrefs+prod",
+                ActivityId = activityId,
                 Arguments = new Dictionary<string, IArgument>()
                 {
                     {
@@ -130,6 +134,84 @@ namespace XrefGetFromACC.Controllers
             {
                 await _hubContext.Clients.Client(browserConnectionId).SendAsync("onComplete", ex.Message);
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private async Task<string> CreateFetchXrefsActivity()
+        {
+            Console.WriteLine("Setting up activity...");
+
+            //xrefgetapp is Nickname of the application, which is already created nickname for your application.
+            // ref: https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/forgeapps-id-PATCH/
+            //fetchxrefs is the name of the activity.
+            var myActivity = "xrefgetapp.fetchxrefs+prod";
+            var activityName = "fetchxrefs";
+            var label = "prod";
+            var actResponse = await _designAutomation.ActivitiesApi.GetActivityAsync(myActivity, throwOnError: false);
+            var activity = new Activity()
+            {
+               
+                CommandLine =
+                    [
+                        $"\"$(engine.path)\\accoreconsole.exe\" /i \"$(args[inputFile].path)\" /s \"$(settings[script].path)\""
+                    ],
+                Engine = "Autodesk.AutoCAD+24_3",
+                Parameters = new Dictionary<string, Parameter>()
+                    {
+                        { "inputFile",
+                                    new Parameter()
+                                        {
+                                        Verb = Verb.RefGet,
+                                        Required = true
+                                        }
+                        },
+                        { "etransmit",
+                                    new Parameter()
+                                    {
+                                    Verb = Verb.Put,
+                                    LocalName = "adskFiles",
+                                    Required = true,
+                                    Zip = true
+                                    }
+                        }
+                        
+                    },
+                Settings = new Dictionary<string, ISetting>()
+                {
+                        { "script",
+                                    new StringSetting()
+                                    {
+                                        //This script will be executed on the DA server
+                                    Value = "(vl-directory-files \"adskFiles\" nil 0)\n"
+                                    }
+                        }
+                },
+                Id = activityName
+            };
+            if (actResponse.HttpResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                await _hubContext.Clients.All.SendAsync("onComplete", $"Creating activity {myActivity} ...");               
+                await _designAutomation.CreateActivityAsync(activity, label);
+                return myActivity;
+            }
+            await actResponse.HttpResponse.EnsureSuccessStatusCodeAsync();
+            await _hubContext.Clients.All.SendAsync("onComplete","\tFound existing activity...");
+            if (!Equals(activity, actResponse.Content))
+            {
+                await _hubContext.Clients.All.SendAsync("onComplete", $"\tUpdating activity {myActivity}...");
+                await _designAutomation.UpdateActivityAsync(activity, label);
+            }
+            await _hubContext.Clients.All.SendAsync("onComplete", $"Activity: \n\t{activity}");
+            return myActivity;
+            static bool Equals(Activity a, Activity b)
+            {
+                Console.Write("\tComparing activities...");
+                //ignore id and version
+                b.Id = a.Id;
+                b.Version = a.Version;
+                var res = a.ToString() == b.ToString();
+                Console.WriteLine(res ? "Same." : "Different");
+                return res;
             }
         }
     }
