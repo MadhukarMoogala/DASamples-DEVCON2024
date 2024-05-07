@@ -154,8 +154,7 @@ Note:
             }
           ]
         }
-      ],
-      ....
+      ]      
 ```
 
 - For more information visit [Reference Downloading | Design Automation API | Autodesk Platform Services](https://aps.autodesk.com/en/docs/design-automation/v3/developers_guide/reference-downloading/)
@@ -382,8 +381,8 @@ All projects that use APS services require APS credentials. Here's the process:
 ```
 
 ```bash
-git clone https://github.com/MadhukarMoogala/DASamples-DEVCON2024.git XrefGetFromACC
-cd XrefGetFromACC
+git clone https://github.com/MadhukarMoogala/DASamples-DEVCON2024.git XrefGet
+cd XrefGet
 dotnet restore
 dotnet build
 ```
@@ -393,7 +392,7 @@ dotnet build
 - Project: XrefGetFromACC
 
 ```bash
-cd Files
+cd XrefGetFromACC
 dotnet watch
 ```
 
