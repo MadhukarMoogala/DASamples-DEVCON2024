@@ -17,9 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Autodesk.Forge.DesignAutomation">
-      <HintPath>..\..\..\..\repo\forge-api-dotnet-design.automation\src\Autodesk.Forge.DesignAutomation\bin\Debug\net6.0\Autodesk.Forge.DesignAutomation.dll</HintPath>
-    </Reference>
+      <Reference Include="Autodesk.Forge.DesignAutomation">
+          <!--needed support for refget ref: https://github.com/MadhukarMoogala/forge-api-dotnet-design.automation/commit/2b6771ad5c133dc4d3a8d98818c09501cdbfe33c-->
+          <HintPath>..\Binary\Autodesk.Forge.DesignAutomation.dll</HintPath>
+      </Reference>
   </ItemGroup>
 
 </Project>

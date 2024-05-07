@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
     <PublishTrimmed>True</PublishTrimmed>
   </PropertyGroup>
 
@@ -15,9 +15,23 @@
 
   <ItemGroup>
     <PackageReference Include="PDFsharp" Version="6.1.0-preview-3" />
-  </ItemGroup>
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="IF EXIST &quot;$(SolutionDir)Files\package.zip&quot; (del &quot;$(SolutionDir)Files\package.zip&quot;)&#xD;&#xA;XCOPY &quot;$(TargetDir)&quot; &quot;$(ProjectDir)Bundle\$(ProjectName).bundle\Contents\&quot; /S /E /Y&#xD;&#xA;7z a -tzip &quot;$(SolutionDir)Files\package.zip&quot; &quot;$(ProjectDir)Bundle\&quot;* -xr!*.gitkeep&#xD;&#xA;7z l &quot;$(SolutionDir)Files\package.zip&quot;" />
-    </Target>
+  </ItemGroup>   
+    <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="IF EXIST &quot;$(SolutionDir)Files\package.zip&quot; (del &quot;$(SolutionDir)Files\package.zip&quot;)&#xD;&#xA;XCOPY &quot;$(TargetDir)&quot; &quot;$(ProjectDir)Bundle\$(ProjectName).bundle\Contents\&quot; /S /E /Y&#xD;&#xA;tar -cf - &quot;$(ProjectDir)Bundle&quot; | gzip &gt; &quot;$(SolutionDir)Files\package.zip&quot;&#xD;&#xA;tar -tvf $(SolutionDir)Files\package.zip" />
+    </Target>-->
 
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <!-- Delete existing package.zip if it exists -->
+        <Exec Command="if exist &quot;$(SolutionDir)Files\package.zip&quot; del &quot;$(SolutionDir)Files\package.zip&quot;" />
+        <!-- Copy files and directories -->
+        <ItemGroup>
+            <BundleFiles Include="$(TargetDir)\**\*" />
+            <BundleFiles Include="$(ProjectDir)Bundle\$(ProjectName).bundle\Contents\**\*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(BundleFiles)" DestinationFolder="$(ProjectDir)Bundle\$(ProjectName).bundle\Contents\"/>
+        <!-- Create a tar archive and compress it to package.zip -->
+        <Exec Command="tar -cf - &quot;$(ProjectDir)Bundle&quot; | gzip &gt; &quot;$(SolutionDir)Files\package.zip&quot;" />
+        <!-- List contents of package.zip -->
+        <Exec Command="tar -tvf &quot;$(SolutionDir)Files\package.zip&quot;" />
+    </Target>
 </Project>
